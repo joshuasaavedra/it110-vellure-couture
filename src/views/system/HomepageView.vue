@@ -1,105 +1,189 @@
 <script setup>
-import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const theme = ref('light')
-const drawer = ref(false)  // Sidebar starts hidden
+const router = useRouter()
 
-function toggleTheme() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
-
-function toggleDrawer() {
-  drawer.value = !drawer.value  // Toggle sidebar visibility
+function goTo(page) {
+  router.push(page)
 }
 </script>
 
 <template>
-  <v-app :theme="theme">
-    <!-- Sidebar (Navigation Drawer) -->
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-      color="teal-darken-4"
-      temporary
-      hide-overlay
-      class="pt-5"
-    >
-      <v-list dense>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white font-weight-bold">Categories</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+  <v-app>
+    <v-app-bar flat class="navbar-glass px-4">
+      <span class="text-white text-h6 font-weight-bold">Vellure Couture</span>
 
-        <v-divider></v-divider>
+      <v-spacer />
 
-        <!-- Menu Items -->
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white">Men</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white">Women</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white">Kids</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white">Sale</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-white">Create a Design</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+      <div class="d-flex align-center" style="gap: 16px;">
+        <v-btn text class="text-white" @click="goTo('/home')">Home</v-btn>
+        <v-btn text class="text-white" @click="goTo('/shop')">Shop</v-btn>
+        <v-btn text class="text-white" @click="goTo('/search')">Search</v-btn>
 
-    <!-- App Bar (Top Navigation) -->
-    <v-app-bar color="teal-darken-4" class="px-3">
-      <v-toolbar-title class="text-white">Vellure Couture</v-toolbar-title>
-      <v-spacer></v-spacer>
+        <v-btn icon @click="goTo('/cart')">
+          <v-img
+            src="/public/images/cart.png"
+            alt="Cart"
+            width="28"
+            height="28"
+            contain
+          />
+        </v-btn>
 
-      <!-- Menu Icon to Toggle Sidebar -->
-      <v-btn icon @click="toggleDrawer">
-        <v-icon class="text-white">mdi-menu</v-icon>
-      </v-btn>
-
-      <!-- Theme Toggle Button -->
-      <v-btn
-        :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-        text="Toggle Theme"
-        slim
-        @click="toggleTheme"
-      ></v-btn>
+        <v-btn icon @click="goTo('/user')">
+          <v-img
+            src="/public/images/user.png"
+            alt="User"
+            width="28"
+            height="28"
+            contain
+          />
+        </v-btn>
+      </div>
     </v-app-bar>
 
-    <!-- Main Content Area -->
-    <v-main>
-      <v-container class="mt-10">
-        <v-row justify="center">
-          <v-col cols="12" md="8">
-            <v-card elevation="10" class="pa-6">
-              <h1 class="text-h4 font-weight-bold text-teal-darken-4 mb-4">Welcome to the Homepage!</h1>
-              <p class="text-subtitle-1">
-                This is your home screen. You can add dashboard widgets, recent activity, or anything else here.
-              </p>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
+    <v-main class="main-banner d-flex align-center justify-end">
+      <div class="text-right banner-content">
+        <p class="text-caption text-dark-green mb-2">Winter Collection</p>
+        <h1 class="display-1 font-weight-bold text-dark-green mb-4">
+          Get up to 30% Off New Arrivals
+        </h1>
+        <v-btn
+          class="shop-now-btn text-white font-weight-bold"
+          rounded
+          @click="goTo('/shop')"
+        >
+          Shop Now
+        </v-btn>
+      </div>
     </v-main>
 
-    <!-- Footer -->
-    <v-footer class="d-flex justify-center" color="teal-darken-4" border app>
+    <v-container class="text-center pt-12 pb-6">
+      <h2 class="luxury-title">The World of Luxury</h2>
+      <p class="luxury-subtitle">Explore our collections, iconic accessories, women and men</p>
+    </v-container>
+
+    <v-container class="pb-10">
+      <v-row justify="center" spacing="16">
+        <v-col cols="12" md="4">
+          <div class="image-box">
+            <v-img
+              src="/images/women-clothing.jpg"
+              alt="Women Collection"
+              height="300px"
+              class="rounded-lg"
+              cover
+            />
+            <div class="centered-text">Women</div>
+          </div>
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <div class="image-box">
+            <v-img
+              src="/images/accessories.jpg"
+              alt="Accessories Collection"
+              height="300px"
+              class="rounded-lg"
+              cover
+            />
+            <div class="centered-text">Accessories</div>
+          </div>
+        </v-col>
+
+        <v-col cols="12" md="4">
+          <div class="image-box">
+            <v-img
+              src="/images/men-clothing.jpg"
+              alt="Men Collection"
+              height="300px"
+              class="rounded-lg"
+              cover
+            />
+            <div class="centered-text">Men</div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-footer class="footer-glass d-flex justify-center" app>
       2025 - Vellure Couture
     </v-footer>
   </v-app>
 </template>
+
+<style scoped>
+.navbar-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.footer-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.main-banner {
+  background: url('/images/clothing-bg.jpg') no-repeat center center;
+  background-size: cover;
+  height: 60vh;
+  width: 100%;
+  position: relative;
+}
+
+.banner-content {
+  max-width: 90%;
+  padding: 0 24px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.text-dark-green {
+  color: #003129 !important;
+}
+
+.shop-now-btn {
+  background-color: #333 !important;
+  color: white !important;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 15px;
+  transition: background-color 0.3s ease;
+}
+.shop-now-btn:hover {
+  background-color: #555 !important;
+}
+
+.luxury-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #003129;
+  font-family: 'Playfair Display', serif;
+}
+.luxury-subtitle {
+  font-size: 1.1rem;
+  color: #003129;
+  font-family: 'Raleway', sans-serif;
+}
+
+.image-box {
+  position: relative;
+}
+.centered-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+}
+</style>

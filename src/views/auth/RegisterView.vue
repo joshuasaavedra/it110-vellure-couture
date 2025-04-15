@@ -4,24 +4,19 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const theme = ref('light')
 const firstname = ref('')
 const lastname = ref('')
 const email = ref('')
 const phone = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
-
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
+const acceptTerms = ref(false)
 
 function handlePhoneInput(event) {
   event.target.value = event.target.value.replace(/[^0-9]/g, '')
 }
 
 function handleRegister() {
-  // Simple validation example (optional, you can improve this)
   if (!firstname.value || !lastname.value || !email.value || !phone.value || !password.value) {
     alert('Please fill in all required fields.')
     return
@@ -32,7 +27,11 @@ function handleRegister() {
     return
   }
 
-  // Simulate successful registration
+  if (!acceptTerms.value) {
+    alert('You must accept the terms and conditions.')
+    return
+  }
+
   console.log('User registered:', {
     firstname: firstname.value,
     lastname: lastname.value,
@@ -41,106 +40,159 @@ function handleRegister() {
     password: password.value
   })
 
-  // Redirect to login
   router.push('/login')
 }
 </script>
 
 <template>
-  <v-responsive class="border rounded">
-    <v-app :theme="theme">
-      <v-app-bar class="px-3" color="teal-darken-4">
-        <v-spacer></v-spacer>
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          text="Toggle Theme"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
+  <v-app>
+    <!-- Navbar -->
+    <v-app-bar flat class="navbar-glass px-4">
+      <span class="text-white text-h6 font-weight-bold">Vellure Couture</span>
+    </v-app-bar>
 
-      <v-main>
-        <v-container>
-          <v-row no-gutters class="d-flex">
-            <!-- Register Card -->
-            <v-col cols="12" md="6" class="d-flex align-center pa-0">
-              <v-card class="mx-auto" elevation="8" outlined>
-                <template v-slot:title>
-                  <span class="font-weight-black text-teal-darken-4">Register to Vellure Couture!</span>
-                </template>
+    <v-main>
+      <v-container class="fill-height login-container" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="8" md="4">
+            <!-- Glassmorphic Register Card -->
+            <v-card class="pa-6 glass-card" rounded="xl" elevation="10">
+              <!-- Logo Image -->
+              <div class="text-center mb-4">
+                <v-img
+                  src="/images/circle-logo.png"
+                  alt="Vellure Couture Logo"
+                  contain
+                  width="80"
+                  height="80"
+                  class="mx-auto"
+                ></v-img>
+              </div>
 
-                <v-card-text class="bg-surface-light pt-4">
-                  <v-form fast-fail @submit.prevent="handleRegister">
-                    <v-text-field
-                      label="Firstname"
-                      variant="outlined"
-                      v-model="firstname"
-                    ></v-text-field>
+              <!-- Title & Subtitle -->
+              <div class="text-center mb-6">
+                <h3 class="font-weight-bold">Create Your Account</h3>
+                <p>Please fill in the form below to register.</p>
+              </div>
 
-                    <v-text-field
-                      label="Lastname"
-                      variant="outlined"
-                      v-model="lastname"
-                    ></v-text-field>
+              <!-- Register Form -->
+              <v-form @submit.prevent="handleRegister">
+                <v-text-field
+                  v-model="firstname"
+                  label="First Name"
+                  variant="outlined"
+                  dense
+                  class="mb-3"
+                />
+                <v-text-field
+                  v-model="lastname"
+                  label="Last Name"
+                  variant="outlined"
+                  dense
+                  class="mb-3"
+                />
+                <v-text-field
+                  v-model="email"
+                  label="Email"
+                  variant="outlined"
+                  dense
+                  class="mb-3"
+                />
+                <v-text-field
+                  v-model="phone"
+                  label="Phone Number"
+                  type="tel"
+                  variant="outlined"
+                  dense
+                  @input="handlePhoneInput"
+                  class="mb-3"
+                />
+                <v-text-field
+                  v-model="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  dense
+                  class="mb-3"
+                />
+                <v-text-field
+                  v-model="passwordConfirmation"
+                  label="Confirm Password"
+                  type="password"
+                  variant="outlined"
+                  dense
+                  class="mb-3"
+                />
 
-                    <v-text-field
-                      label="Email"
-                      variant="outlined"
-                      v-model="email"
-                    ></v-text-field>
+                <v-checkbox
+                  v-model="acceptTerms"
+                  label="I accept the terms and conditions"
+                  hide-details
+                  density="compact"
+                  class="mb-4"
+                />
 
-                    <v-text-field
-                      label="Phone Number"
-                      variant="outlined"
-                      type="tel"
-                      v-model="phone"
-                      @input="handlePhoneInput"
-                    ></v-text-field>
+                <v-btn
+                  type="submit"
+                  block
+                  color="#121212"
+                  size="default"
+                  class="mb-3 text-white"
+                  rounded
+                >
+                  Create Account
+                </v-btn>
+              </v-form>
 
-                    <v-text-field
-                      label="Password"
-                      type="password"
-                      variant="outlined"
-                      v-model="password"
-                    ></v-text-field>
+              <!-- Already have account -->
+              <div class="text-center mt-6">
+                <span>Already have an account?</span>
+                <RouterLink to="/login" class="text-primary font-weight-medium text-decoration-none">
+                  Login
+                </RouterLink>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
 
-                    <v-text-field
-                      label="Password confirmation"
-                      type="password"
-                      variant="outlined"
-                      v-model="passwordConfirmation"
-                    ></v-text-field>
-
-                    <v-btn class="mt-2" type="submit" block color="teal-darken-4">
-                      Register
-                    </v-btn>
-                  </v-form>
-
-                  <v-divider class="my-5"></v-divider>
-
-                  <h5 class="text-center">
-                    <RouterLink to="/login">Click here to Login</RouterLink>
-                  </h5>
-                </v-card-text>
-              </v-card>
-            </v-col>
-
-            <!-- Right-side Image -->
-            <v-col cols="12" md="6" class="pa-0">
-              <v-img
-                src="/images/vellure-couture.png"
-                alt="Register Image"
-                aspect-ratio="1"
-                contain
-              ></v-img>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
-
-      <v-footer class="d-flex justify-center" color="teal-darken-4" border app>
-        2025 - Vellure Couture
-      </v-footer>
-    </v-app>
-  </v-responsive>
+    <!-- Footer -->
+    <v-footer class="footer-glass d-flex justify-center" app>
+      2025 - Vellure Couture
+    </v-footer>
+  </v-app>
 </template>
+
+<style scoped>
+.login-container {
+  background: url('/images/background.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.navbar-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.footer-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+}
+</style>
