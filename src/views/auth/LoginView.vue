@@ -4,13 +4,8 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const theme = ref('light')
 const email = ref('')
 const password = ref('')
-
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
 
 function handleLogin() {
   if (!email.value || !password.value) {
@@ -18,80 +13,156 @@ function handleLogin() {
     return
   }
 
-  // Simulate login logic (replace with real API call if needed)
   console.log('Logging in with:', email.value, password.value)
-
-  // Navigate to homepage
   router.push('/home')
+}
+
+function loginWithApple() {
+  console.log('Redirecting to Apple login...')
+  router.push('/auth/apple')
+}
+
+function loginWithGoogle() {
+  console.log('Redirecting to Google login...')
+  router.push('/auth/google')
 }
 </script>
 
 <template>
-  <v-responsive class="border rounded">
-    <v-app :theme="theme">
-      <v-app-bar class="px-3" color="teal-darken-4">
-        <v-spacer></v-spacer>
-        <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
-          text="Toggle Theme"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
+  <v-app>
+    <v-app-bar flat class="navbar-glass px-4">
+      <span class="text-white text-h6 font-weight-bold">Vellure Couture</span>
+    </v-app-bar>
 
-      <v-main>
-        <v-container>
-          <v-row no-gutters class="d-flex">
-            <!-- Login Card -->
-            <v-col cols="12" md="6" class="d-flex align-center pa-0">
-              <v-card class="mx-auto" elevation="8" outlined>
-                <template v-slot:title>
-                  <span class="font-weight-black text-teal-darken-4">Welcome to Vellure Couture!</span>
-                </template>
+    <v-main>
+      <v-container class="fill-height login-container" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12" sm="8" md="4">
+            <v-card class="pa-6 glass-card" rounded="xl" elevation="10">
+              <div class="text-center mb-4">
+                <v-img
+                  src="/images/circle-logo.png"
+                  alt="Vellure Couture Logo"
+                  contain
+                  width="80"
+                  height="80"
+                  class="mx-auto"
+                ></v-img>
+              </div>
 
-                <v-card-text class="bg-surface-light pt-4">
-                  <v-form fast-fail @submit.prevent="handleLogin">
-                    <v-text-field
-                      label="Email"
-                      v-model="email"
-                      variant="outlined"
-                    ></v-text-field>
+              <div class="text-center mb-6">
+                <h3 class="font-weight-bold">Welcome to Vellure Couture!</h3>
+                <p>Please enter your details to login.</p>
+              </div>
 
-                    <v-text-field
-                      label="Password"
-                      type="password"
-                      v-model="password"
-                      variant="outlined"
-                    ></v-text-field>
+              <v-form @submit.prevent="handleLogin">
+                <v-text-field
+                  v-model="email"
+                  label="Email"
+                  placeholder="@uxintace.com"
+                  variant="outlined"
+                  dense
+                  hide-details
+                  class="mb-4"
+                />
 
-                    <v-btn class="mt-2" type="submit" block color="teal-darken-4">Login</v-btn>
-                  </v-form>
+                <v-text-field
+                  v-model="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  dense
+                  hide-details
+                  class="mb-2"
+                />
 
-                  <v-divider class="my-5"></v-divider>
+                <div class="d-flex justify-space-between align-center mb-4">
+                  <RouterLink to="#" class="text-primary text-decoration-none">Forgot password?</RouterLink>
+                  <v-checkbox label="Remember me" hide-details density="compact" class="ma-0 pa-0" />
+                </div>
 
-                  <h5 class="text-center">
-                    Don't have an account? <RouterLink to="/register">Click here to Register</RouterLink>
-                  </h5>
-                </v-card-text>
-              </v-card>
-            </v-col>
+                <v-btn
+                  type="submit"
+                  block
+                  color="#121212"
+                  size="default"
+                  class="mb-3 text-white"
+                  rounded
+                >
+                  Login
+                </v-btn>
+              </v-form>
 
-            <!-- Right-side Image -->
-            <v-col cols="12" md="6" class="pa-0">
-              <v-img
-                src="/images/vellure-couture.png"
-                alt="Login Image"
-                aspect-ratio="1"
-                contain
-              ></v-img>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
+              <div class="text-center mb-2 text-caption">OR</div>
+              <div class="d-flex justify-space-between mb-3" style="gap: 8px;">
+                <v-btn
+                  variant="outlined"
+                  color="grey"
+                  @click="loginWithApple"
+                  style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
+                  class="flex-grow-1"
+                >
+                  <v-icon start size="20">mdi-apple</v-icon>
+                </v-btn>
 
-      <v-footer class="d-flex justify-center" color="teal-darken-4" border app>
-        2025 - Vellure Couture
-      </v-footer>
-    </v-app>
-  </v-responsive>
+                <v-btn
+                  variant="outlined"
+                  color="grey"
+                  @click="loginWithGoogle"
+                  style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
+                  class="flex-grow-1"
+                >
+                  <v-icon start size="20">mdi-google</v-icon>
+                </v-btn>
+              </div>
+
+              <div class="text-center mt-6">
+                <span>Don’t have an account?</span>
+                <RouterLink to="/register" class="text-primary font-weight-medium text-decoration-none">
+                  Register
+                </RouterLink>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+
+    <v-footer class="footer-glass d-flex justify-center" app>
+      2025 - Vellure Couture
+    </v-footer>
+  </v-app>
 </template>
+
+<style scoped>
+.login-container {
+  background: url('/images/background.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.navbar-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.footer-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+@supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+}
+</style>
