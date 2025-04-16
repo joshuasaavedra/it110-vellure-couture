@@ -1,18 +1,36 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { requiredValidator, emailValidator } from '@/utils/validators'
 
 const router = useRouter()
 
 const email = ref('')
 const password = ref('')
+const refVForm = ref()
+
+const formDataDefault = {
+  email: '',
+  password: '',
+}
+
+const onLogin = () => {
+  alert(formData.value.email)
+}
+
+// Validation rules
+const emailRules = [requiredValidator, emailValidator]
+const passwordRules = [requiredValidator]
+
+const onFormSubmit = () => {
+  refVForm.value?.validate().then(({ valid: isValid }) => {
+    if (isValid) {
+      handleLogin()
+    }
+  })
+}
 
 function handleLogin() {
-  if (!email.value || !password.value) {
-    alert('Please enter both email and password.')
-    return
-  }
-
   console.log('Logging in with:', email.value, password.value)
   router.push('/home')
 }
@@ -47,7 +65,7 @@ function loginWithGoogle() {
                   width="80"
                   height="80"
                   class="mx-auto"
-                ></v-img>
+                />
               </div>
 
               <div class="text-center mb-6">
@@ -55,14 +73,15 @@ function loginWithGoogle() {
                 <p>Please enter your details to login.</p>
               </div>
 
-              <v-form @submit.prevent="handleLogin">
+              <!-- FORM START -->
+              <v-form ref="refVForm" @submit.prevent="onFormSubmit">
                 <v-text-field
                   v-model="email"
                   label="Email"
                   placeholder="@uxintace.com"
                   variant="outlined"
                   dense
-                  hide-details
+                  :rules="emailRules"
                   class="mb-4"
                 />
 
@@ -72,12 +91,14 @@ function loginWithGoogle() {
                   type="password"
                   variant="outlined"
                   dense
-                  hide-details
+                  :rules="passwordRules"
                   class="mb-2"
                 />
 
                 <div class="d-flex justify-space-between align-center mb-4">
-                  <RouterLink to="#" class="text-primary text-decoration-none">Forgot password?</RouterLink>
+                  <RouterLink to="#" class="text-primary text-decoration-none">
+                    Forgot password?
+                  </RouterLink>
                   <v-checkbox label="Remember me" hide-details density="compact" class="ma-0 pa-0" />
                 </div>
 
@@ -92,8 +113,10 @@ function loginWithGoogle() {
                   Login
                 </v-btn>
               </v-form>
+              <!-- FORM END -->
 
               <div class="text-center mb-2 text-caption">OR</div>
+
               <div class="d-flex justify-space-between mb-3" style="gap: 8px;">
                 <v-btn
                   variant="outlined"
