@@ -1,49 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { requiredValidator, emailValidator } from '@/utils/validators'
-
-const router = useRouter()
-
-const email = ref('')
-const password = ref('')
-const refVForm = ref()
-
-const formDataDefault = {
-  email: '',
-  password: '',
-}
-
-const onLogin = () => {
-  alert(formData.value.email)
-}
-
-// Validation rules
-const emailRules = [requiredValidator, emailValidator]
-const passwordRules = [requiredValidator]
-
-const onFormSubmit = () => {
-  refVForm.value?.validate().then(({ valid: isValid }) => {
-    if (isValid) {
-      handleLogin()
-    }
-  })
-}
-
-function handleLogin() {
-  console.log('Logging in with:', email.value, password.value)
-  router.push('/home')
-}
-
-function loginWithApple() {
-  console.log('Redirecting to Apple login...')
-  router.push('/auth/apple')
-}
-
-function loginWithGoogle() {
-  console.log('Redirecting to Google login...')
-  router.push('/auth/google')
-}
+import LoginForm from '@/components/auth/LoginForm.vue'
 </script>
 
 <template>
@@ -57,6 +13,7 @@ function loginWithGoogle() {
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="pa-6 glass-card" rounded="xl" elevation="10">
+              <!-- Logo -->
               <div class="text-center mb-4">
                 <v-img
                   src="/images/circle-logo.png"
@@ -68,80 +25,22 @@ function loginWithGoogle() {
                 />
               </div>
 
+              <!-- Title -->
               <div class="text-center mb-6">
                 <h3 class="font-weight-bold">Welcome to Vellure Couture!</h3>
                 <p>Please enter your details to login.</p>
               </div>
 
-              <!-- FORM START -->
-              <v-form ref="refVForm" @submit.prevent="onFormSubmit">
-                <v-text-field
-                  v-model="email"
-                  label="Email"
-                  placeholder="@uxintace.com"
-                  variant="outlined"
-                  dense
-                  :rules="emailRules"
-                  class="mb-4"
-                />
+              <!-- Login Form -->
+              <LoginForm />
 
-                <v-text-field
-                  v-model="password"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  dense
-                  :rules="passwordRules"
-                  class="mb-2"
-                />
-
-                <div class="d-flex justify-space-between align-center mb-4">
-                  <RouterLink to="#" class="text-primary text-decoration-none">
-                    Forgot password?
-                  </RouterLink>
-                  <v-checkbox label="Remember me" hide-details density="compact" class="ma-0 pa-0" />
-                </div>
-
-                <v-btn
-                  type="submit"
-                  block
-                  color="#121212"
-                  size="default"
-                  class="mb-3 text-white"
-                  rounded
-                >
-                  Login
-                </v-btn>
-              </v-form>
-              <!-- FORM END -->
-
-              <div class="text-center mb-2 text-caption">OR</div>
-
-              <div class="d-flex justify-space-between mb-3" style="gap: 8px;">
-                <v-btn
-                  variant="outlined"
-                  color="grey"
-                  @click="loginWithApple"
-                  style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
-                  class="flex-grow-1"
-                >
-                  <v-icon start size="20">mdi-apple</v-icon>
-                </v-btn>
-
-                <v-btn
-                  variant="outlined"
-                  color="grey"
-                  @click="loginWithGoogle"
-                  style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
-                  class="flex-grow-1"
-                >
-                  <v-icon start size="20">mdi-google</v-icon>
-                </v-btn>
-              </div>
-
+              <!-- Bottom -->
               <div class="text-center mt-6">
                 <span>Don’t have an account?</span>
-                <RouterLink to="/register" class="text-primary font-weight-medium text-decoration-none">
+                <RouterLink
+                  to="/register"
+                  class="text-primary font-weight-medium text-decoration-none"
+                >
                   Register
                 </RouterLink>
               </div>
