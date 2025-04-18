@@ -1,17 +1,21 @@
 <script setup>
 import { ref } from 'vue'
+import { supabase, formActionDefault } from '@/utils/supabase.js'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const firstname = ref('')
-const lastname = ref('')
-const email = ref('')
-const phone = ref('')
-const password = ref('')
-const passwordConfirmation = ref('')
+const firstname = ref(null)
+const lastname = ref(null)
+const email = ref(null)
+const phone = ref(null)
+const password = ref(null)
+const passwordConfirmation = ref(null)
 const acceptTerms = ref(false)
 const registerForm = ref(null)
+
+const formAction = ref({ ...formActionDefault })
+const showTerms = ref(false) // Initially hidden
 
 const required = v => !!v || 'This field is required'
 
@@ -39,23 +43,69 @@ const termsRules = [
   v => !!v || 'You must accept the terms and conditions'
 ]
 
+const onSubmit = async () => {
+  formAction.value = { ...formActionDefault }
+  formAction.value.formProcess = true
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value,
+    options: {
+      data: {
+        firstname: firstname.value,
+        lastname: lastname.value,
+      }
+    }
+  })
+
+  if (error) {
+    formAction.value.FormErrorMessage = error.message
+    formAction.value.formStatus = error.status
+  } else if (data) {
+    formAction.value.formSuccessMessage = 'Successfully Registered Account.'
+    showTerms.value = true // Show checkbox after success
+    setTimeout(() => {
+      router.push('/login')
+    }, 2000)
+  }
+
+  formAction.value.formProcess = false
+}
+
 function handleRegister() {
   if (registerForm.value?.validate()) {
-    console.log('User registered:', {
-      firstname: firstname.value,
-      lastname: lastname.value,
-      email: email.value,
-      phone: phone.value,
-      password: password.value
-    })
-
-    router.push('/login')
+    onSubmit()
   }
 }
 </script>
 
 <template>
-  <v-form ref="registerForm" @submit.prevent="handleRegister">
+  <v-form ref="registerForm" @submit.prevent="handleRegister" lazy-validation>
+    <!-- Success Alert -->
+    <v-alert
+      v-if="formAction.formSuccessMessage && formAction.formSuccessMessage.trim() !== ''"
+      type="success"
+      class="mb-3"
+      border="start"
+      variant="outlined"
+      elevation="1"
+    >
+      {{ formAction.formSuccessMessage }}
+    </v-alert>
+
+    <!-- Error Alert -->
+    <v-alert
+      v-if="formAction.FormErrorMessage"
+      type="error"
+      class="mb-3"
+      border="start"
+      variant="outlined"
+      elevation="1"
+    >
+      {{ formAction.FormErrorMessage }}
+    </v-alert>
+
+    <!-- Form Fields -->
     <v-text-field
       v-model="firstname"
       label="First Name"
@@ -63,6 +113,7 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="[required]"
+      hide-details="auto"
     />
     <v-text-field
       v-model="lastname"
@@ -71,6 +122,7 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="[required]"
+      hide-details="auto"
     />
     <v-text-field
       v-model="email"
@@ -79,6 +131,7 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="emailRules"
+      hide-details="auto"
     />
     <v-text-field
       v-model="phone"
@@ -88,6 +141,7 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="phoneRules"
+      hide-details="auto"
     />
     <v-text-field
       v-model="password"
@@ -97,6 +151,7 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="passwordRules"
+      hide-details="auto"
     />
     <v-text-field
       v-model="passwordConfirmation"
@@ -106,9 +161,12 @@ function handleRegister() {
       dense
       class="mb-3"
       :rules="confirmPasswordRules"
+      hide-details="auto"
     />
 
+    <!-- Terms Checkbox (only after successful registration) -->
     <v-checkbox
+      v-if="showTerms"
       v-model="acceptTerms"
       :rules="termsRules"
       label="I accept the terms and conditions"
@@ -117,6 +175,7 @@ function handleRegister() {
       class="mb-4"
     />
 
+    <!-- Submit Button -->
     <v-btn
       type="submit"
       block
@@ -124,6 +183,8 @@ function handleRegister() {
       size="default"
       class="mb-3 text-white"
       rounded
+      :disabled="formAction.formProcess"
+      :loading="formAction.formProcess"
     >
       Create Account
     </v-btn>
