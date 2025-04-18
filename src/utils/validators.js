@@ -67,7 +67,7 @@ export const betweenValidator = (value, min, max) => {
   )
 }
 
-// 👉 Integer Validator
+
 export const integerValidator = (value) => {
   if (isEmpty(value)) return true
 
@@ -77,7 +77,7 @@ export const integerValidator = (value) => {
   return /^-?[0-9]+$/.test(String(value)) || 'This field must be a number'
 }
 
-// 👉 Regex Validator
+
 export const regexValidator = (value, regex) => {
   if (isEmpty(value)) return true
 
@@ -89,14 +89,14 @@ export const regexValidator = (value, regex) => {
   return regeX.test(String(value)) || "The input doesn't match the expected format"
 }
 
-// 👉 Alpha Validator
+
 export const alphaValidator = (value) => {
   if (isEmpty(value)) return true
 
   return /^[A-Z]*$/i.test(String(value)) || 'The Alpha field may only contain alphabetic characters'
 }
 
-// 👉 URL Validator
+
 export const urlValidator = (value) => {
   if (isEmpty(value)) return true
 
@@ -105,7 +105,7 @@ export const urlValidator = (value) => {
   return re.test(String(value)) || 'URL is invalid'
 }
 
-// 👉 Length Validator
+
 export const lengthValidator = (value, length) => {
   if (isEmpty(value)) return true
 
