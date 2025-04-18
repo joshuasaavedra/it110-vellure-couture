@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { supabase } from '@/utils/supabase.js'
 
 const router = useRouter()
 const email = ref('')
@@ -17,21 +18,40 @@ const passwordRules = [
   v => v.length >= 6 || 'Password must be at least 6 characters'
 ]
 
-function handleLogin() {
+const formAction = ref({
+  formProcess: false,
+  formErrorMessage: ''
+})
+
+async function handleLogin() {
+  formAction.value.formErrorMessage = ''
+  formAction.value.formProcess = true
+
   if (loginForm.value?.validate()) {
-    console.log('Logging in with:', email.value, password.value)
-    router.push('/home')
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    })
+
+    if (error) {
+      const rawMsg = error.message.toLowerCase()
+
+      if (rawMsg.includes('invalid login credentials')) {
+        formAction.value.formErrorMessage = 'Incorrect email or password.'
+      } else if (rawMsg.includes('email')) {
+        formAction.value.formErrorMessage = 'Please enter a valid email address.'
+      } else if (rawMsg.includes('password')) {
+        formAction.value.formErrorMessage = 'Password is incorrect or missing.'
+      } else {
+        formAction.value.formErrorMessage = 'Something went wrong. Please try again.'
+      }
+    } else {
+      console.log('Logged in successfully')
+      router.push('/home')
+    }
   }
-}
 
-function loginWithApple() {
-  console.log('Redirecting to Apple login...')
-  router.push('/auth/apple')
-}
-
-function loginWithGoogle() {
-  console.log('Redirecting to Google login...')
-  router.push('/auth/google')
+  formAction.value.formProcess = false
 }
 </script>
 
@@ -69,32 +89,16 @@ function loginWithGoogle() {
       size="default"
       class="mb-3 text-white"
       rounded
+      :disabled="formAction.formProcess"
+      :loading="formAction.formProcess"
     >
       Login
     </v-btn>
 
-    <div class="text-center mb-2 text-caption">OR</div>
-
-    <div class="d-flex justify-space-between mb-3" style="gap: 8px;">
-      <v-btn
-        variant="outlined"
-        color="grey"
-        @click="loginWithApple"
-        style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
-        class="flex-grow-1"
-      >
-        <v-icon start size="20">mdi-apple</v-icon>
-      </v-btn>
-
-      <v-btn
-        variant="outlined"
-        color="grey"
-        @click="loginWithGoogle"
-        style="border-radius: 12px; min-width: 0; padding: 0 12px; font-size: 0.8rem;"
-        class="flex-grow-1"
-      >
-        <v-icon start size="20">mdi-google</v-icon>
-      </v-btn>
+    <div v-if="formAction.formErrorMessage" class="text-center mb-2 text-caption text-red">
+      {{ formAction.formErrorMessage }}
     </div>
+
+    <!-- Removed the 'OR' section with Apple and Google login buttons -->
   </v-form>
 </template>
