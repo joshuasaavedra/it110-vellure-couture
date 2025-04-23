@@ -8,8 +8,8 @@ export const supabase = createClient(
 
  //form action utils
  export const formActionDefault = {
- formProcess: false ,
-   formStatus: null,
-  formErrorMessage: ' ',
-  formSuccessMessage: ' '
- }
+  formProcess: false,
+  formStatus: null,
+  formErrorMessage: '',
+  formSuccessMessage: ''
+}

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import AlertNotification from '@/router/common/AlertNotification.vue'
 import { supabase, formActionDefault } from '@/utils/supabase.js'
 import { useRouter } from 'vue-router'
 
@@ -15,7 +16,7 @@ const acceptTerms = ref(false)
 const registerForm = ref(null)
 
 const formAction = ref({ ...formActionDefault })
-const showTerms = ref(false) // Initially hidden
+const showTerms = ref(false)
 
 const required = v => !!v || 'This field is required'
 
@@ -59,52 +60,36 @@ const onSubmit = async () => {
   })
 
   if (error) {
-    formAction.value.FormErrorMessage = error.message
+    formAction.value.formErrorMessage = error.message
     formAction.value.formStatus = error.status
-  } else if (data) {
+  } else if (data?.user) {
     formAction.value.formSuccessMessage = 'Successfully Registered Account.'
-    showTerms.value = true // Show checkbox after success
+    registerForm.value.reset()
+
     setTimeout(() => {
-      router.push('/login')
-    }, 2000)
+      router.replace('/home')
+    }, 1500)
   }
 
   formAction.value.formProcess = false
 }
 
-function handleRegister() {
-  if (registerForm.value?.validate()) {
-    onSubmit()
+async function handleRegister() {
+  const isValid = await registerForm.value?.validate()
+  if (isValid) {
+    await onSubmit()
   }
 }
 </script>
 
 <template>
+  <!-- ✅ Single place to handle alerts -->
+  <AlertNotification
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  />
+
   <v-form ref="registerForm" @submit.prevent="handleRegister" lazy-validation>
-    <!-- Success Alert -->
-    <v-alert
-      v-if="formAction.formSuccessMessage && formAction.formSuccessMessage.trim() !== ''"
-      type="success"
-      class="mb-3"
-      border="start"
-      variant="outlined"
-      elevation="1"
-    >
-      {{ formAction.formSuccessMessage }}
-    </v-alert>
-
-    <!-- Error Alert -->
-    <v-alert
-      v-if="formAction.FormErrorMessage"
-      type="error"
-      class="mb-3"
-      border="start"
-      variant="outlined"
-      elevation="1"
-    >
-      {{ formAction.FormErrorMessage }}
-    </v-alert>
-
     <!-- Form Fields -->
     <v-text-field
       v-model="firstname"
