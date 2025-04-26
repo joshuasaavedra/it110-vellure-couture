@@ -65,7 +65,7 @@ const onSubmit = async () => {
     formAction.value.formSuccessMessage = 'Successfully Registered Account.'
     showTerms.value = true // Show checkbox after success
     setTimeout(() => {
-      router.push('/login')
+      router.push('/home')
     }, 2000)
   }
 
