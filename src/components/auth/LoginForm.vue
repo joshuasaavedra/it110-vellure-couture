@@ -47,7 +47,12 @@ async function handleLogin() {
       }
     } else {
       console.log('Logged in successfully')
-      router.push('/home')
+
+// Optional: Wait a moment to show success feedback (if any)
+setTimeout(() => {
+  router.replace('/home') // replace() avoids the login page staying in browser history
+}, 500)
+
     }
   }
 
@@ -99,6 +104,5 @@ async function handleLogin() {
       {{ formAction.formErrorMessage }}
     </div>
 
-    <!-- Removed the 'OR' section with Apple and Google login buttons -->
   </v-form>
 </template>

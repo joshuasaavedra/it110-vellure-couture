@@ -1,10 +1,18 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const router = useRouter()
+const searchQuery = ref('')
 
 function goTo(page) {
   router.push(page)
+}
+
+function search() {
+  if (searchQuery.value.trim()) {
+    router.push(`/search?query=${encodeURIComponent(searchQuery.value.trim())}`)
+  }
 }
 </script>
 
@@ -15,10 +23,22 @@ function goTo(page) {
 
       <v-spacer />
 
+      <!-- Search Bar -->
+      <v-text-field
+        v-model="searchQuery"
+        placeholder="Search..."
+        hide-details
+        dense
+        solo-inverted
+        flat
+        prepend-inner-icon="mdi-magnify"
+        class="search-bar"
+        @keyup.enter="search"
+      />
+
       <div class="d-flex align-center" style="gap: 16px;">
         <v-btn text class="text-white" @click="goTo('/home')">Home</v-btn>
         <v-btn text class="text-white" @click="goTo('/shop')">Shop</v-btn>
-        <v-btn text class="text-white" @click="goTo('/search')">Search</v-btn>
 
         <v-btn icon @click="goTo('/cart')">
           <v-img
@@ -185,5 +205,10 @@ function goTo(page) {
   font-size: 2rem;
   font-weight: bold;
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.search-bar {
+  max-width: 500px;
+  color: white;
 }
 </style>
