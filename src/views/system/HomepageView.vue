@@ -1,68 +1,133 @@
 <script setup>
+import { ref } from 'vue'
 import AppLayout from '@/components/layout/AppLayout.vue'
+import { useDisplay } from 'vuetify'
+
+const { mobile } = useDisplay()
+
+const collections = ref([
+  {
+    title: 'Women',
+    image: '/images/women-clothing.jpg',
+    route: '/shop/women'
+  },
+  {
+    title: 'Men',
+    image: '/images/men-clothing.jpg',
+    route: '/shop/men'
+  },
+  {
+    title: 'Accessories',
+    image: '/images/accessories.jpg',
+    route: '/shop/accessories'
+  }
+])
+
+const goTo = (route) => {
+  // Implement navigation logic
+  console.log(`Navigating to ${route}`)
+}
+
+const goToCollection = (route) => {
+  // Implement collection navigation logic
+  console.log(`Navigating to collection ${route}`)
+}
 </script>
 
 <template>
   <AppLayout>
     <template #content>
-      <div class="main-banner d-flex align-center justify-end">
-        <div class="text-right banner-content">
-          <p class="text-caption text-dark-green mb-2">Winter Collection</p>
-          <h1 class="display-1 font-weight-bold text-dark-green mb-4">
-            Get up to 30% Off New Arrivals
-          </h1>
-          <v-btn class="shop-now-btn text-white font-weight-bold" rounded @click="goTo('/shop')">
-            Shop Now
-          </v-btn>
-        </div>
-      </div>
-
-      <div class="text-center pt-12 pb-6">
-        <h2 class="luxury-title">The World of Luxury</h2>
-        <p class="luxury-subtitle">Explore our collections, iconic accessories, women and men</p>
-      </div>
-
-      <v-container class="py-10">
-        <v-row justify="center" spacing="16">
-          <v-col cols="12" md="4">
-            <div class="image-box">
-              <v-img
-                src="/images/women-clothing.jpg"
-                alt="Women Collection"
-                height="300px"
-                class="rounded-lg"
-                cover
-              />
-              <div class="centered-text">Women</div>
-            </div>
-          </v-col>
-
-          <v-col cols="12" md="4">
-            <div class="image-box">
-              <v-img
-                src="/images/accessories.jpg"
-                alt="Accessories Collection"
-                height="300px"
-                class="rounded-lg"
-                cover
-              />
-              <div class="centered-text">Accessories</div>
-            </div>
-          </v-col>
-
-          <v-col cols="12" md="4">
-            <div class="image-box">
-              <v-img
-                src="/images/men-clothing.jpg"
-                alt="Men Collection"
-                height="300px"
-                class="rounded-lg"
-                cover
-              />
-              <div class="centered-text">Men</div>
+      <v-container fluid class="pa-0">
+        <v-row no-gutters>
+          <v-col cols="12">
+            <div
+              class="main-banner position-relative d-flex align-center"
+              :class="mobile ? 'justify-center px-4' : 'justify-end px-8 '"
+            >
+              <div
+                class="banner-content text-center"
+                :class="mobile ? 'text-center w-100' : 'text-right'"
+              >
+                <v-chip
+                  color="primary"
+                  variant="elevated"
+                  class="mb-3"
+                >
+                  Winter Collection
+                </v-chip>
+                <h1
+                  class="text-h4 text-md-h2 font-weight-bold text-dark-green mb-4"
+                  :class="mobile ? 'text-center' : 'text-right'"
+                >
+                  Elevate Your Style
+                  <br>
+                  Up to 30% Off New Arrivals
+                </h1>
+                <div
+                  class="d-flex"
+                  :class="mobile ? 'justify-center' : 'justify-end'"
+                >
+                  <v-btn
+                    color="primary"
+                    size="large"
+                    rounded="xl"
+                    class="shop-now-btn text-white font-weight-bold"
+                    @click="goTo('/shop')"
+                  >
+                    Shop Now
+                    <v-icon end>mdi-arrow-right</v-icon>
+                  </v-btn>
+                </div>
+              </div>
             </div>
           </v-col>
         </v-row>
+
+        <v-container class="py-12">
+          <v-row class="text-center">
+            <v-col cols="12">
+              <h2 class="text-h4 text-md-h3 font-weight-bold mb-4">
+                The World of Luxury
+              </h2>
+              <p class="text-subtitle-1 text-medium-emphasis">
+                Explore our curated collections, iconic accessories, and timeless designs
+              </p>
+            </v-col>
+          </v-row>
+
+          <v-row justify="center" class="mt-8" :class="{ 'flex-column': $vuetify.display.smAndDown }">
+            <v-col
+              v-for="(collection, index) in collections"
+              :key="index"
+              cols="12"
+              md="4"
+              class="mb-4"
+            >
+              <v-card
+                elevation="6"
+                class="collection-card"
+                @click="goToCollection(collection.route)"
+              >
+                <v-img
+                  :src="collection.image"
+                  :alt="collection.title"
+                  height="350"
+                  cover
+                  class="collection-image"
+                >
+                  <div class="collection-overlay d-flex align-end justify-center">
+                    <v-card-title class="text-white text-center pb-4">
+                      {{ collection.title }}
+                    </v-card-title>
+                  </div>
+                </v-img>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-col cols="12" md="12" class="footer-glass d-flex justify-center" v-if="mobile" elevation="0">
+      2025 - Vellure Couture
+    </v-col>
+        </v-container>
       </v-container>
     </template>
   </AppLayout>
@@ -70,63 +135,57 @@ import AppLayout from '@/components/layout/AppLayout.vue'
 
 <style scoped>
 .main-banner {
-  background: url('/images/clothing-bg.jpg') no-repeat center center;
+  background: linear-gradient(45deg, rgba(0,0,0,0.5), transparent);
+  min-height: 100vh;
+  background-image: url('/images/clothing-bg.jpg');
   background-size: cover;
-  width: 100%;
-  height: 100vh;
+  background-position: center;
+  margin-top: -64px; /* Offset the AppBar height */
+  padding-top: 64px; /* Compensate for the negative margin */
 }
 
 .banner-content {
-  max-width: 90%;
-  padding: 0 24px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
+  max-width: 600px;
+  padding: 0 16px;
 }
 
-.text-dark-green {
-  color: #003129 !important;
+@media (max-width: 600px) {
+  .main-banner {
+    min-height: 50vh;
+    background-size: cover;
+    margin-top: -56px; /* Adjust for mobile AppBar height */
+    padding-top: 56px;
+  }
+
+  .banner-content {
+    max-width: 100%;
+  }
 }
 
-.shop-now-btn {
-  background-color: #333 !important;
-  color: white !important;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 15px;
-  transition: background-color 0.3s ease;
-}
-.shop-now-btn:hover {
-  background-color: #555 !important;
+.collection-card {
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-.luxury-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #003129;
-  font-family: 'Playfair Display', serif;
-}
-.luxury-subtitle {
-  font-size: 1.1rem;
-  color: #003129;
-  font-family: 'Raleway', sans-serif;
+.collection-card:hover {
+  transform: scale(1.05);
 }
 
-.image-box {
+.collection-image {
   position: relative;
 }
-.centered-text {
+
+.collection-overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));
+}
+.footer-glass {
+  background-color: rgba(0, 77, 64, 0.75) !important;
   color: white;
-  font-size: 2rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
 }
 </style>

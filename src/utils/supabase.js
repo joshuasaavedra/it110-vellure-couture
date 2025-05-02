@@ -14,12 +14,3 @@ export const formActionDefault = {
   formSuccessMessage: '',
 }
 
-export const isAuthenticated = async () => {
-  const { data, error } = await supabase.auth.getSession()
-  if (error) {
-    console.error('Error fetching session:', error)
-    return false
-  }
-
-  return !!data.session
-}

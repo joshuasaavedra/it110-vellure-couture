@@ -6,30 +6,34 @@ const { mobile } = useDisplay()
 
 <template>
   <v-app>
-    <v-app-bar class="navbar-glass px-4 py-1" app fixed>
-      <v-row>
+    <v-app-bar class="navbar-glass px-2 py-0" app fixed elevation="0" height="56">
+      <v-row no-gutters align="center">
         <v-col cols="12" md="12" class="d-flex justify-between align-center" v-if="!mobile">
-          <span class="text-white text-h6 font-weight-bold">Vellure Couture</span>
+          <span class="text-white text-h6 font-weight-bold ml-2">
+            <i>Vellure Couture</i>
+          </span>
           <v-spacer />
           <!-- Desktop Search Bar -->
           <v-text-field
             placeholder="Search..."
             hide-details
             prepend-inner-icon="mdi-magnify"
-            class="search-bar"
-            variant="outlined"
+            class="search-bar mr-2"
+            variant="solo-filled"
+            density="compact"
+            clearable
           />
 
-          <div class="d-flex align-center" style="gap: 16px">
-            <v-btn text class="text-white">Home</v-btn>
-            <v-btn text class="text-white">Shop</v-btn>
+          <div class="d-flex align-center mr-2" style="gap: 8px">
+            <v-btn text class="text-white" size="x-small">Home</v-btn>
+            <v-btn text class="text-white" size="x-small" to="/shop">Shop</v-btn>
 
-            <v-btn icon>
-              <v-icon>mdi-cart</v-icon>
+            <v-btn icon size="x-small">
+              <v-icon size="small">mdi-cart</v-icon>
             </v-btn>
 
-            <v-btn icon>
-              <v-icon>mdi-account</v-icon>
+            <v-btn icon size="x-small">
+              <v-icon size="small">mdi-account</v-icon>
             </v-btn>
           </div>
         </v-col>
@@ -40,21 +44,20 @@ const { mobile } = useDisplay()
             placeholder="Search"
             hide-details
             prepend-inner-icon="mdi-magnify"
-            class="search-bar"
+            class="mobile-search-bar"
             variant="solo-filled"
-            dense
+            density="compact"
             clearable
           />
-          <v-btn icon size="50">
-            <v-icon>mdi-cart</v-icon>
+          <v-btn icon size="x-small" class="mr-2">
+            <v-icon size="small">mdi-cart</v-icon>
           </v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
 
-    <v-main>
-      <v-container fluid class="pt-16">
-        <!-- Extra padding to prevent content underlapping the fixed app-bar -->
+    <v-main class="main-content">
+      <v-container fluid class="pa-0">
         <slot name="content" />
       </v-container>
     </v-main>
@@ -63,27 +66,40 @@ const { mobile } = useDisplay()
     <v-bottom-navigation
       v-if="mobile"
       app
-      class="navbar-glass mobile-nav py-4 position-fixed bottom-0"
+      class="navbar-glass mobile-nav position-fixed bottom-0"
+      elevation="0"
+      height="56"
     >
-      <v-btn icon size="30">
+      <v-btn icon size="small">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn icon size="30">
+      <v-btn icon size="small">
         <v-icon>mdi-cart</v-icon>
       </v-btn>
-      <v-btn icon size="30">
+      <v-btn icon size="small">
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </v-bottom-navigation>
 
     <!-- Footer for desktop -->
-    <v-footer class="footer-glass d-flex justify-center" app v-if="!mobile">
+    <v-footer class="footer-glass d-flex justify-center" app v-if="!mobile" elevation="0">
       2025 - Vellure Couture
     </v-footer>
   </v-app>
 </template>
 
 <style scoped>
+.main-content {
+  height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 56px;
+}
+
+.mobile-nav {
+  height: 56px;
+  padding: 0 !important;
+}
+
 .footer-glass {
   background-color: rgba(0, 77, 64, 0.75) !important;
   color: white;
@@ -91,13 +107,24 @@ const { mobile } = useDisplay()
 }
 
 .search-bar {
-  max-width: 500px;
+  max-width: 400px;
   color: white;
+  margin-right: 8px;
+}
+
+.mobile-search-bar {
+  max-width: 250px;
+  margin-right: 10px;
+  height: 40px;
 }
 
 .navbar-glass {
   background-color: rgba(0, 77, 64, 0.75) !important;
   color: white;
   backdrop-filter: blur(10px);
+}
+
+:deep(body) {
+  overflow: hidden !important;
 }
 </style>
