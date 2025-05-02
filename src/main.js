@@ -14,13 +14,8 @@ import App from './App.vue'
 import router from './router'
 
 // Log the Supabase environment variables to verify they are correctly loaded
-console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
-console.log('Supabase Anon Key:', import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 // Check if the environment variables are correctly set
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.error('Supabase environment variables are missing or incorrect.')
-}
 
 const app = createApp(App)
 

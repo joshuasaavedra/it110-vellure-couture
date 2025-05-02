@@ -1,151 +1,95 @@
 <script setup>
 import { ref } from 'vue'
-import AlertNotification from '@/router/common/AlertNotification.vue'
-import { supabase, formActionDefault } from '@/utils/supabase.js'
-import { useRouter } from 'vue-router'
+import {
+  requiredValidator,
+  emailValidator,
+  phoneNumberValidator,
+  passwordValidator,
+  confirmedValidator,
+} from '@/utils/validators'
+import { useRegister } from '@/components/composables/auth/register'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 
-const router = useRouter()
+const isPasswordVisible = ref(false)
+const isPasswordConfirmVisible = ref(false)
 
-const firstname = ref(null)
-const lastname = ref(null)
-const email = ref(null)
-const phone = ref(null)
-const password = ref(null)
-const passwordConfirmation = ref(null)
-const acceptTerms = ref(false)
-const registerForm = ref(null)
-
-const formAction = ref({ ...formActionDefault })
-const showTerms = ref(false)
-
-const required = v => !!v || 'This field is required'
-
-const emailRules = [
-  required,
-  v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-]
-
-const phoneRules = [
-  required,
-  v => /^[0-9]{10,15}$/.test(v) || 'Enter a valid phone number'
-]
-
-const passwordRules = [
-  required,
-  v => v.length >= 6 || 'Password must be at least 6 characters'
-]
-
-const confirmPasswordRules = [
-  required,
-  v => v === password.value || 'Passwords do not match'
-]
-
-const termsRules = [
-  v => !!v || 'You must accept the terms and conditions'
-]
-
-const onSubmit = async () => {
-  formAction.value = { ...formActionDefault }
-  formAction.value.formProcess = true
-
-  const { data, error } = await supabase.auth.signUp({
-    email: email.value,
-    password: password.value,
-    options: {
-      data: {
-        firstname: firstname.value,
-        lastname: lastname.value,
-      }
-    }
-  })
-
-  if (error) {
-    formAction.value.formErrorMessage = error.message
-    formAction.value.formStatus = error.status
-  } else if (data?.user) {
-    formAction.value.formSuccessMessage = 'Successfully Registered Account.'
-    registerForm.value.reset()
-
-    setTimeout(() => {
-      router.replace('/home')
-    }, 1500)
-  }
-
-  formAction.value.formProcess = false
-}
-
-async function handleRegister() {
-  const isValid = await registerForm.value?.validate()
-  if (isValid) {
-    await onSubmit()
-  }
-}
+const { formData, formAction, refVForm, onFormSubmit } = useRegister()
 </script>
 
 <template>
-  <!-- ✅ Single place to handle alerts -->
   <AlertNotification
     :form-success-message="formAction.formSuccessMessage"
     :form-error-message="formAction.formErrorMessage"
   />
 
-  <v-form ref="registerForm" @submit.prevent="handleRegister" lazy-validation>
-    <!-- Form Fields -->
+  <v-form ref="refVForm" @submit.prevent="onFormSubmit" lazy-validation>
     <v-text-field
-      v-model="firstname"
+      v-model="formData.firstname"
       label="First Name"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="[required]"
+      :rules="[requiredValidator]"
       hide-details="auto"
     />
     <v-text-field
-      v-model="lastname"
+      v-model="formData.lastname"
       label="Last Name"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="[required]"
+      :rules="[requiredValidator]"
       hide-details="auto"
     />
     <v-text-field
-      v-model="email"
+      v-model="formData.email"
       label="Email"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="emailRules"
+      :rules="[requiredValidator, emailValidator]"
       hide-details="auto"
+      prepend-inner-icon="mdi-email-outline"
     />
     <v-text-field
-      v-model="phone"
+      v-model="formData.phone"
       label="Phone Number"
       type="tel"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="phoneRules"
+      :rules="[requiredValidator, phoneNumberValidator]"
       hide-details="auto"
+      prepend-inner-icon="mdi-phone-outline"
     />
     <v-text-field
-      v-model="password"
+      v-model="formData.password"
       label="Password"
-      type="password"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="passwordRules"
+      prepend-inner-icon="mdi-lock-outline"
+      :rules="[requiredValidator, passwordValidator]"
+      :type="isPasswordVisible ? 'text' : 'password'"
+      :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+      @click:append-inner="isPasswordVisible = !isPasswordVisible"
       hide-details="auto"
     />
     <v-text-field
-      v-model="passwordConfirmation"
-      label="Confirm Password"
-      type="password"
+      v-model="formData.password_confirmation"
+      label="Password"
       variant="outlined"
       dense
       class="mb-3"
-      :rules="confirmPasswordRules"
+      prepend-inner-icon="mdi-lock-outline"
+      :rules="[
+        requiredValidator,
+        requiredValidator,
+        confirmedValidator(formData.password, formData.password_confirmation),
+      ]"
+      :type="isPasswordConfirmVisible ? 'text' : 'password'"
+      :append-inner-icon="isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'"
+      @click:append-inner="isPasswordConfirmVisible = !isPasswordConfirmVisible"
       hide-details="auto"
     />
 

@@ -2,14 +2,24 @@ import { createClient } from '@supabase/supabase-js'
 
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(
-   import.meta.env.VITE_SUPABASE_URL,
-   import.meta.env.VITE_SUPABASE_ANON_KEY
-  )
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+)
 
- //form action utils
- export const formActionDefault = {
+//form action utils
+export const formActionDefault = {
   formProcess: false,
   formStatus: null,
   formErrorMessage: '',
-  formSuccessMessage: ''
+  formSuccessMessage: '',
+}
+
+export const isAuthenticated = async () => {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) {
+    console.error('Error fetching session:', error)
+    return false
+  }
+
+  return !!data.session
 }

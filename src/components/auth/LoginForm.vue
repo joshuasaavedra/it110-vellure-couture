@@ -1,85 +1,41 @@
 <script setup>
+import { requiredValidator, emailValidator } from '@/utils/validators'
+import { useLogin } from '@/components/composables/auth/login'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { supabase } from '@/utils/supabase.js'
 
-const router = useRouter()
-const email = ref('')
-const password = ref('')
-const loginForm = ref(null)
-
-const emailRules = [
-  v => !!v || 'Email is required',
-  v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-]
-
-const passwordRules = [
-  v => !!v || 'Password is required',
-  v => v.length >= 6 || 'Password must be at least 6 characters'
-]
-
-const formAction = ref({
-  formProcess: false,
-  formErrorMessage: ''
-})
-
-async function handleLogin() {
-  formAction.value.formErrorMessage = ''
-  formAction.value.formProcess = true
-
-  if (loginForm.value?.validate()) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    })
-
-    if (error) {
-      const rawMsg = error.message.toLowerCase()
-
-      if (rawMsg.includes('invalid login credentials')) {
-        formAction.value.formErrorMessage = 'Incorrect email or password.'
-      } else if (rawMsg.includes('email')) {
-        formAction.value.formErrorMessage = 'Please enter a valid email address.'
-      } else if (rawMsg.includes('password')) {
-        formAction.value.formErrorMessage = 'Password is incorrect or missing.'
-      } else {
-        formAction.value.formErrorMessage = 'Something went wrong. Please try again.'
-      }
-    } else {
-      console.log('Logged in successfully')
-
-// Optional: Wait a moment to show success feedback (if any)
-setTimeout(() => {
-  router.replace('/home') // replace() avoids the login page staying in browser history
-}, 500)
-
-    }
-  }
-
-  formAction.value.formProcess = false
-}
+const { formData, formAction, refVForm, onFormSubmit } = useLogin()
+const isPasswordVisible = ref(false)
 </script>
 
 <template>
-  <v-form ref="loginForm" @submit.prevent="handleLogin">
+  <AlertNotification
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  ></AlertNotification>
+  <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-text-field
-      v-model="email"
+      v-model="formData.email"
       label="Email"
-      placeholder="@uxintace.com"
-      :rules="emailRules"
+      prepend-inner-icon="mdi-email-outline"
+      :rules="[requiredValidator, emailValidator]"
       variant="outlined"
+      type="email"
       dense
       class="mb-4"
     />
 
     <v-text-field
-      v-model="password"
+      v-model="formData.password"
       label="Password"
-      type="password"
-      :rules="passwordRules"
+      :type="isPasswordVisible ? 'text' : 'password'"
+      prepend-inner-icon="mdi-lock-outline"
+      :rules="[requiredValidator]"
       variant="outlined"
       dense
       class="mb-2"
+      @click:append-inner="isPasswordVisible = !isPasswordVisible"
+      :append-inner-icon="isPasswordVisible ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
     />
 
     <div class="d-flex justify-space-between align-center mb-4">
@@ -103,6 +59,5 @@ setTimeout(() => {
     <div v-if="formAction.formErrorMessage" class="text-center mb-2 text-caption text-red">
       {{ formAction.formErrorMessage }}
     </div>
-
   </v-form>
 </template>

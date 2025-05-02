@@ -1,3 +1,8 @@
+<script setup>
+
+</script>
+
+
 <template>
   <v-container class="text-center pt-10">
     <h1>Shop All Products</h1>
