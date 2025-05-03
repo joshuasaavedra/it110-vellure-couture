@@ -7,6 +7,14 @@ export const useProductStore = defineStore('product', () => {
   const productsFromApi = ref([])
   const products = ref([])
   const categoriesFromApi = ref([])
+  const categories = ref([])
+
+  function $reset() {
+    productsFromApi.value = []
+    products.value = []
+    categoriesFromApi.value = []
+    categories.value = []
+  }
 
   //Actions
   //retrieve categories from api and insert to supabase table
@@ -101,7 +109,7 @@ export const useProductStore = defineStore('product', () => {
           name: product.title,
           description: product.description,
           price: product.price,
-          stock: product.rating?.count || 10, // Use rating.count as stock or default to 10
+          stock: null,
           category_id: categoryMap[product.category], // Use the correct category ID
         }
       })
@@ -133,5 +141,7 @@ export const useProductStore = defineStore('product', () => {
     products,
     categoriesFromApi,
     getCategoriesFromApi,
+    $reset,
+    categories,
   }
 })

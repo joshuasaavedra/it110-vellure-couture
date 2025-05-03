@@ -1,18 +1,31 @@
 <script setup>
 import { useDisplay } from 'vuetify'
 import ProfileHeader from './ProfileHeader.vue'
+import CartDrawer from './CartDrawer.vue'
 import { useAuthUserStore } from '@/stores/authUser'
 import { ref, onMounted } from 'vue'
 const authStore = useAuthUserStore()
 const { mobile } = useDisplay()
 
+// Initialize cart drawer as closed
+const cartDrawer = ref(false)
+
 //load variables
 const isLoggedIn = ref(false)
 const isMobileLogged = ref(false)
 
-onMounted(async () => {
+const getLoggedStatus = async () => {
   isLoggedIn.value = await authStore.isAuthenticated()
   isMobileLogged.value = mobile.value && isLoggedIn.value
+}
+
+const toggleCartDrawer = () => {
+  cartDrawer.value = !cartDrawer.value
+}
+
+// Load Functions during component rendering
+onMounted(() => {
+  getLoggedStatus()
 })
 </script>
 
@@ -25,6 +38,7 @@ onMounted(async () => {
             <i>Vellure Couture</i>
           </span>
           <v-spacer />
+
           <!-- Desktop Search Bar -->
           <v-text-field
             placeholder="Search..."
@@ -40,7 +54,8 @@ onMounted(async () => {
             <v-btn text class="text-white" size="large" to="/home">Home</v-btn>
             <v-btn text class="text-white" size="large" to="/shop">Shop</v-btn>
 
-            <v-btn icon size="large">
+            <!-- Cart Button -->
+            <v-btn icon variant="text" @click="toggleCartDrawer" size="large">
               <v-icon size="large">mdi-cart</v-icon>
             </v-btn>
 
@@ -59,12 +74,27 @@ onMounted(async () => {
             density="compact"
             clearable
           />
-          <v-btn icon size="large" class="mr-2">
+          <!-- Cart Button -->
+          <v-btn icon variant="text" @click="toggleCartDrawer" size="large">
             <v-icon size="large">mdi-cart</v-icon>
           </v-btn>
         </v-col>
       </v-row>
     </v-app-bar>
+
+    <!-- Cart Drawer (works on both desktop and mobile) -->
+
+    <v-navigation-drawer
+      v-model="cartDrawer"
+      :location="mobile ? 'bottom' : 'right'"
+      temporary
+      width="350"
+      :height="mobile ? '100vh' : 'auto'"
+      class="rounded-lg"
+      :disabled="!cartDrawer"
+    >
+      <CartDrawer @close="toggleCartDrawer" />
+    </v-navigation-drawer>
 
     <v-main class="main-content">
       <v-container fluid class="pa-0">
@@ -81,10 +111,10 @@ onMounted(async () => {
       height="56"
     >
       <v-btn icon size="large" to="/home">
-        <v-icon>mdi-home</v-icon>
+        <v-icon size="large">mdi-home</v-icon>
       </v-btn>
-      <v-btn icon size="large" to="/cart">
-        <v-icon>mdi-cart</v-icon>
+      <v-btn icon size="large" to="/shop">
+        <v-icon size="large">mdi-store</v-icon>
       </v-btn>
       <ProfileHeader v-if="isLoggedIn"></ProfileHeader>
     </v-bottom-navigation>
