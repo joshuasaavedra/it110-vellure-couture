@@ -110,7 +110,7 @@ export const useProductStore = defineStore('product', () => {
           description: product.description,
           price: product.price,
           stock: null,
-          category_id: categoryMap[product.category], // Use the correct category ID
+          category_id: categoryMap[product.category],
         }
       })
 
