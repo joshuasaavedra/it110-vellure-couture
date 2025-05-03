@@ -4,10 +4,35 @@ import ProfileHeader from './ProfileHeader.vue'
 import CartDrawer from './CartDrawer.vue'
 import { useAuthUserStore } from '@/stores/authUser'
 import { useCartStore } from '@/stores/cartStore'
+import { useSearchStore } from '@/stores/searchStore'
+import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 const authStore = useAuthUserStore()
 const cartStore = useCartStore()
+const searchStore = useSearchStore()
+const router = useRouter()
 const { mobile } = useDisplay()
+
+// Search functionality
+const searchInput = ref('')
+const mobileSearchInput = ref('')
+
+const handleSearch = (input) => {
+  if (!input.trim()) return
+
+  // Set search query in store
+  searchStore.setSearchQuery(input.trim())
+
+  // Navigate to search results page with query parameter
+  router.push({
+    name: 'SearchResults',
+    query: { q: input.trim() },
+  })
+
+  // Clear input fields after search
+  searchInput.value = ''
+  mobileSearchInput.value = ''
+}
 
 // Initialize cart drawer as closed
 const cartDrawer = ref(false)
@@ -43,6 +68,7 @@ onMounted(() => {
 
           <!-- Desktop Search Bar -->
           <v-text-field
+            v-model="searchInput"
             placeholder="Search..."
             hide-details
             prepend-inner-icon="mdi-magnify"
@@ -50,7 +76,9 @@ onMounted(() => {
             variant="solo-filled"
             density="compact"
             clearable
-          />
+            @keyup.enter="handleSearch(searchInput)"
+          >
+          </v-text-field>
 
           <div class="d-flex align-center mr-2" style="gap: 8px">
             <v-btn text class="text-white" size="large" to="/home">Home</v-btn>
@@ -75,6 +103,7 @@ onMounted(() => {
         <v-col cols="12" sm="12" class="d-flex justify-center align-center" v-if="mobile">
           <!-- Mobile Search Bar -->
           <v-text-field
+            v-model="mobileSearchInput"
             placeholder="Search"
             hide-details
             prepend-inner-icon="mdi-magnify"
@@ -82,7 +111,9 @@ onMounted(() => {
             variant="solo-filled"
             density="compact"
             clearable
-          />
+            @keyup.enter="handleSearch(mobileSearchInput)"
+          >
+          </v-text-field>
           <!-- Cart Button -->
           <v-btn icon variant="text" @click="toggleCartDrawer" size="large">
             <v-badge

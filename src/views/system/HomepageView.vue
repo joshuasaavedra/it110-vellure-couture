@@ -9,27 +9,21 @@ const collections = ref([
   {
     title: 'Women',
     image: '/images/women-clothing.jpg',
-    route: '/shop/women'
+    route: '/shop/women',
   },
   {
     title: 'Men',
     image: '/images/men-clothing.jpg',
-    route: '/shop/men'
+    route: '/shop/men',
   },
   {
     title: 'Accessories',
     image: '/images/accessories.jpg',
-    route: '/shop/accessories'
-  }
+    route: '/shop/accessories',
+  },
 ])
 
-const goTo = (route) => {
-  // Implement navigation logic
-  console.log(`Navigating to ${route}`)
-}
-
 const goToCollection = (route) => {
-  // Implement collection navigation logic
   console.log(`Navigating to collection ${route}`)
 }
 </script>
@@ -48,31 +42,22 @@ const goToCollection = (route) => {
                 class="banner-content text-center"
                 :class="mobile ? 'text-center w-100' : 'text-right'"
               >
-                <v-chip
-                  color="primary"
-                  variant="elevated"
-                  class="mb-3"
-                >
-                  Winter Collection
-                </v-chip>
+                <v-chip color="primary" variant="elevated" class="mb-3"> Winter Collection </v-chip>
                 <h1
                   class="text-h4 text-md-h2 font-weight-bold text-dark-green mb-4"
                   :class="mobile ? 'text-center' : 'text-right'"
                 >
                   Elevate Your Style
-                  <br>
+                  <br />
                   Up to 30% Off New Arrivals
                 </h1>
-                <div
-                  class="d-flex"
-                  :class="mobile ? 'justify-center' : 'justify-end'"
-                >
+                <div class="d-flex" :class="mobile ? 'justify-center' : 'justify-end'">
                   <v-btn
                     color="primary"
                     size="large"
                     rounded="xl"
                     class="shop-now-btn text-white font-weight-bold"
-                    @click="goTo('/shop')"
+                    to="/shop"
                   >
                     Shop Now
                     <v-icon end>mdi-arrow-right</v-icon>
@@ -86,16 +71,18 @@ const goToCollection = (route) => {
         <v-container class="py-12">
           <v-row class="text-center">
             <v-col cols="12">
-              <h2 class="text-h4 text-md-h3 font-weight-bold mb-4">
-                The World of Luxury
-              </h2>
+              <h2 class="text-h4 text-md-h3 font-weight-bold mb-4">The World of Luxury</h2>
               <p class="text-subtitle-1 text-medium-emphasis">
                 Explore our curated collections, iconic accessories, and timeless designs
               </p>
             </v-col>
           </v-row>
 
-          <v-row justify="center" class="mt-8" :class="{ 'flex-column': $vuetify.display.smAndDown }">
+          <v-row
+            justify="center"
+            class="mt-8"
+            :class="{ 'flex-column': $vuetify.display.smAndDown }"
+          >
             <v-col
               v-for="(collection, index) in collections"
               :key="index"
@@ -124,9 +111,15 @@ const goToCollection = (route) => {
               </v-card>
             </v-col>
           </v-row>
-          <v-col cols="12" md="12" class="footer-glass d-flex justify-center" v-if="mobile" elevation="0">
-      2025 - Vellure Couture
-    </v-col>
+          <v-col
+            cols="12"
+            md="12"
+            class="footer-glass d-flex justify-center"
+            v-if="mobile"
+            elevation="0"
+          >
+            2025 - Vellure Couture
+          </v-col>
         </v-container>
       </v-container>
     </template>
@@ -135,7 +128,7 @@ const goToCollection = (route) => {
 
 <style scoped>
 .main-banner {
-  background: linear-gradient(45deg, rgba(0,0,0,0.5), transparent);
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.5), transparent);
   min-height: 100vh;
   background-image: url('/images/clothing-bg.jpg');
   background-size: cover;
@@ -181,7 +174,7 @@ const goToCollection = (route) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7));
 }
 .footer-glass {
   background-color: rgba(0, 77, 64, 0.75) !important;
