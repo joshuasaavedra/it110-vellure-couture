@@ -3,8 +3,10 @@ import { useDisplay } from 'vuetify'
 import ProfileHeader from './ProfileHeader.vue'
 import CartDrawer from './CartDrawer.vue'
 import { useAuthUserStore } from '@/stores/authUser'
+import { useCartStore } from '@/stores/cartStore'
 import { ref, onMounted } from 'vue'
 const authStore = useAuthUserStore()
+const cartStore = useCartStore()
 const { mobile } = useDisplay()
 
 // Initialize cart drawer as closed
@@ -56,7 +58,14 @@ onMounted(() => {
 
             <!-- Cart Button -->
             <v-btn icon variant="text" @click="toggleCartDrawer" size="large">
-              <v-icon size="large">mdi-cart</v-icon>
+              <v-badge
+                :content="cartStore.totalItems"
+                :value="cartStore.totalItems"
+                color="error"
+                floating
+              >
+                <v-icon size="large">mdi-cart</v-icon>
+              </v-badge>
             </v-btn>
 
             <ProfileHeader v-if="isLoggedIn"></ProfileHeader>
@@ -76,7 +85,14 @@ onMounted(() => {
           />
           <!-- Cart Button -->
           <v-btn icon variant="text" @click="toggleCartDrawer" size="large">
-            <v-icon size="large">mdi-cart</v-icon>
+            <v-badge
+              :content="cartStore.totalItems"
+              :value="cartStore.totalItems"
+              color="error"
+              floating
+            >
+              <v-icon size="large">mdi-cart</v-icon>
+            </v-badge>
           </v-btn>
         </v-col>
       </v-row>

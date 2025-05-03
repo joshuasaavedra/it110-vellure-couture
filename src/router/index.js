@@ -6,6 +6,7 @@ import LoginView from '@/views/auth/LoginView.vue'
 import RegisterView from '@/views/auth/RegisterView.vue'
 import HomepageView from '@/views/system/HomepageView.vue'
 import ShopPage from '@/views/system/ShopPage.vue'
+import OrderHistoryView from '@/views/OrderHistoryView.vue'
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: '/shop',
     name: 'Shop',
     component: ShopPage,
+  },
+  {
+    path: '/orders',
+    name: 'OrderHistory',
+    component: OrderHistoryView,
   },
 ]
 

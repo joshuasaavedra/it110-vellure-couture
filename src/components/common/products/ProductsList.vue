@@ -1,12 +1,16 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useProductStore } from '@/stores/productStore'
+import { useCartStore } from '@/stores/cartStore'
 
 const categories = ref(["men's clothing", "women's clothing", 'accessories'])
 const productStore = useProductStore()
+const cartStore = useCartStore()
 const selectedCategory = ref('')
 const productDialog = ref(false)
 const viewProduct = ref(null)
+const addedToCartSnackbar = ref(false)
+const snackbarMessage = ref('')
 
 const filteredProducts = computed(() => {
   if (selectedCategory.value === '') return productStore.productsFromApi
@@ -17,6 +21,12 @@ const filteredProducts = computed(() => {
 const refresh = () => {
   productStore.getProductsFromApi()
   selectedCategory.value = ''
+}
+
+const addToCart = (product) => {
+  cartStore.addToCart(product)
+  snackbarMessage.value = `${product.title} added to cart`
+  addedToCartSnackbar.value = true
 }
 
 const openProductDetails = (product) => {
@@ -56,7 +66,7 @@ onMounted(async () => {
           <v-img :src="product.image" width="100%" height="200px" contain></v-img>
           <p><b>₱</b> {{ product.price }}</p>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="d-flex flex-column" style="gap: 8px">
           <v-btn
             color="primary"
             variant="outlined"
@@ -65,6 +75,16 @@ onMounted(async () => {
             block
           >
             View Details
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="tonal"
+            size="small"
+            @click="addToCart(product)"
+            block
+            prepend-icon="mdi-cart-plus"
+          >
+            Add to Cart
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -80,12 +100,27 @@ onMounted(async () => {
         <p>{{ viewProduct.description }}</p>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" variant="outlined" append-icon="mdi-cart" size="small" block>
+        <v-btn 
+          color="primary" 
+          variant="outlined" 
+          append-icon="mdi-cart" 
+          size="small" 
+          block
+          @click="addToCart(viewProduct); productDialog = false"
+        >
           Add To Cart
         </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
+  
+  <!-- Snackbar for cart notification -->
+  <v-snackbar v-model="addedToCartSnackbar" :timeout="2000" color="success">
+    {{ snackbarMessage }}
+    <template v-slot:actions>
+      <v-btn variant="text" @click="addedToCartSnackbar = false">Close</v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <style scoped></style>

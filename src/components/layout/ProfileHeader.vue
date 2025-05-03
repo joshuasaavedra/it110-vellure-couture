@@ -82,13 +82,25 @@ const onLogout = async () => {
         </v-list>
 
         <v-divider class="my-3"></v-divider>
+        
+        <v-btn
+          block
+          prepend-icon="mdi-history"
+          variant="plain"
+          to="/orders"
+          class="mb-2 justify-start"
+        >
+          Order History
+        </v-btn>
 
         <v-btn
+          block
           prepend-icon="mdi-logout"
           variant="plain"
           @click="onLogout"
           :loading="formAction.formProcess"
           :disabled="formAction.formProcess"
+          class="justify-start"
         >
           Logout
         </v-btn>
