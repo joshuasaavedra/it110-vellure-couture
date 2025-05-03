@@ -9,8 +9,8 @@ const productDialog = ref(false)
 const viewProduct = ref(null)
 
 const filteredProducts = computed(() => {
-  if (selectedCategory.value === '') return productStore.products
-  return productStore.products.filter(
+  if (selectedCategory.value === '') return productStore.productsFromApi
+  return productStore.productsFromApi.filter(
     (product) => product.category.toLowerCase() === selectedCategory.value.toLowerCase(),
   )
 })
@@ -25,9 +25,9 @@ const openProductDetails = (product) => {
 }
 
 onMounted(async () => {
-  if (productStore.products.length === 0) await productStore.getProductsFromApi()
+  if (productStore.productsFromApi.length === 0) await productStore.getProductsFromApi()
 
-  console.log(productStore.products)
+  console.log(productStore.productsFromApi)
 })
 </script>
 

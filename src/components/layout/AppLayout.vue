@@ -80,7 +80,7 @@ onMounted(async () => {
       elevation="0"
       height="56"
     >
-      <v-btn icon size="large" to="/home ">
+      <v-btn icon size="large" to="/home">
         <v-icon>mdi-home</v-icon>
       </v-btn>
       <v-btn icon size="large" to="/cart">
