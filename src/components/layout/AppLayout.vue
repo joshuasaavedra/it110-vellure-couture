@@ -1,7 +1,19 @@
 <script setup>
-import { ref } from 'vue'
 import { useDisplay } from 'vuetify'
+import ProfileHeader from './ProfileHeader.vue'
+import { useAuthUserStore } from '@/stores/authUser'
+import { ref, onMounted } from 'vue'
+const authStore = useAuthUserStore()
 const { mobile } = useDisplay()
+
+//load variables
+const isLoggedIn = ref(false)
+const isMobileLogged = ref(false)
+
+onMounted(async () => {
+  isLoggedIn.value = await authStore.isAuthenticated()
+  isMobileLogged.value = mobile.value && isLoggedIn.value
+})
 </script>
 
 <template>
@@ -25,16 +37,14 @@ const { mobile } = useDisplay()
           />
 
           <div class="d-flex align-center mr-2" style="gap: 8px">
-            <v-btn text class="text-white" size="x-small">Home</v-btn>
-            <v-btn text class="text-white" size="x-small" to="/shop">Shop</v-btn>
+            <v-btn text class="text-white" size="large">Home</v-btn>
+            <v-btn text class="text-white" size="large" to="/shop">Shop</v-btn>
 
-            <v-btn icon size="x-small">
-              <v-icon size="small">mdi-cart</v-icon>
+            <v-btn icon size="large">
+              <v-icon size="large">mdi-cart</v-icon>
             </v-btn>
 
-            <v-btn icon size="x-small">
-              <v-icon size="small">mdi-account</v-icon>
-            </v-btn>
+            <ProfileHeader v-if="isLoggedIn"></ProfileHeader>
           </div>
         </v-col>
 
@@ -49,8 +59,8 @@ const { mobile } = useDisplay()
             density="compact"
             clearable
           />
-          <v-btn icon size="x-small" class="mr-2">
-            <v-icon size="small">mdi-cart</v-icon>
+          <v-btn icon size="large" class="mr-2">
+            <v-icon size="large">mdi-cart</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -70,15 +80,13 @@ const { mobile } = useDisplay()
       elevation="0"
       height="56"
     >
-      <v-btn icon size="small">
+      <v-btn icon size="large">
         <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn icon size="small">
+      <v-btn icon size="large">
         <v-icon>mdi-cart</v-icon>
       </v-btn>
-      <v-btn icon size="small">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
+      <ProfileHeader v-if="isLoggedIn"></ProfileHeader>
     </v-bottom-navigation>
 
     <!-- Footer for desktop -->
