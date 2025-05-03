@@ -4,8 +4,9 @@ import { useProductStore } from '@/stores/productStore'
 
 const categories = ref(["men's clothing", "women's clothing", 'accessories'])
 const productStore = useProductStore()
-
 const selectedCategory = ref('')
+const productDialog = ref(false)
+const viewProduct = ref(null)
 
 const filteredProducts = computed(() => {
   if (selectedCategory.value === '') return productStore.products
@@ -13,6 +14,15 @@ const filteredProducts = computed(() => {
     (product) => product.category.toLowerCase() === selectedCategory.value.toLowerCase(),
   )
 })
+const refresh = () => {
+  productStore.getProductsFromApi()
+  selectedCategory.value = ''
+}
+
+const openProductDetails = (product) => {
+  viewProduct.value = product
+  productDialog.value = true
+}
 
 onMounted(async () => {
   if (productStore.products.length === 0) await productStore.getProductsFromApi()
@@ -25,7 +35,7 @@ onMounted(async () => {
   <v-row>
     <v-col cols="12" md="3">
       <div class="d-flex align-center ga-2 mb-2 justify-center">
-        <v-btn size="small" icon class="mb-5" @click="productStore.getProductsFromApi()">
+        <v-btn size="small" icon class="mb-5" @click="refresh()">
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
         <v-select
@@ -47,13 +57,35 @@ onMounted(async () => {
           <p><b>₱</b> {{ product.price }}</p>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" variant="outlined" append-icon="mdi-cart" size="small"
-            >Add To Cart</v-btn
+          <v-btn
+            color="primary"
+            variant="outlined"
+            size="small"
+            @click="openProductDetails(product)"
+            block
           >
+            View Details
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
   </v-row>
+
+  <v-dialog v-model="productDialog" width="500">
+    <v-card>
+      <v-card-title>{{ viewProduct.title }}</v-card-title>
+      <v-card-text>
+        <v-img :src="viewProduct.image" width="100%" height="200px" contain></v-img>
+        <p><b>₱</b> {{ viewProduct.price }}</p>
+        <p>{{ viewProduct.description }}</p>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" variant="outlined" append-icon="mdi-cart" size="small" block>
+          Add To Cart
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped></style>
