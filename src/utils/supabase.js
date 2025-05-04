@@ -2,14 +2,15 @@ import { createClient } from '@supabase/supabase-js'
 
 // Create a single supabase client for interacting with your database
 export const supabase = createClient(
-   import.meta.env.VITE_SUPABASE_URL,
-   import.meta.env.VITE_SUPABASE_ANON_KEY
-  )
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY,
+)
 
- //form action utils
- export const formActionDefault = {
- formProcess: false ,
-   formStatus: null,
-  formErrorMessage: ' ',
-  formSuccessMessage: ' '
- }
+//form action utils
+export const formActionDefault = {
+  formProcess: false,
+  formStatus: null,
+  formErrorMessage: '',
+  formSuccessMessage: '',
+}
+

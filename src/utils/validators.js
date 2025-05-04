@@ -47,7 +47,6 @@ export const passwordValidator = (password) => {
   const validPassword = regExp.test(password)
 
   return (
-    // eslint-disable-next-line operator-linebreak
     validPassword ||
     'The password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
   )
@@ -132,4 +131,15 @@ export const imageValidator = (value) => {
   if (isEmpty(value)) return true
 
   return !value || !value.length || value[0].size < 2000000 || 'Image size should be less than 2 MB'
+}
+// 👉 Phone Number Validator
+export const phoneNumberValidator = (value) => {
+  if (isEmpty(value)) return true
+
+  const re = /^(639|09)\d{9}$/
+
+  return (
+    re.test(String(value).replace(/\s/g, '')) ||
+    'The phone number must be in the format 639xxxxxxxxx or 09xxxxxxxxx'
+  )
 }

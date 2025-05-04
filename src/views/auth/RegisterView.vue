@@ -27,7 +27,7 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
 
               <div class="text-center mt-6">
                 <span>Already have an account?</span>
-                <RouterLink to="/login" class="text-primary font-weight-medium text-decoration-none">
+                <RouterLink to="/" class="text-primary font-weight-medium text-decoration-none">
                   Login
                 </RouterLink>
               </div>
@@ -37,9 +37,7 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
       </v-container>
     </v-main>
 
-    <v-footer class="footer-glass d-flex justify-center" app>
-      2025 - Vellure Couture
-    </v-footer>
+    <v-footer class="footer-glass d-flex justify-center" app> 2025 - Vellure Couture </v-footer>
   </v-app>
 </template>
 
