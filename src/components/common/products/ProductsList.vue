@@ -68,7 +68,7 @@ onMounted(async () => {
         </v-card-text>
         <v-card-actions class="d-flex flex-column" style="gap: 8px">
           <v-btn
-            color="primary"
+            color="teal-darken-3"
             variant="outlined"
             size="small"
             @click="openProductDetails(product)"
@@ -77,7 +77,7 @@ onMounted(async () => {
             View Details
           </v-btn>
           <v-btn
-            color="primary"
+            color="teal-darken-3"
             variant="tonal"
             size="small"
             @click="addToCart(product)"
@@ -100,11 +100,11 @@ onMounted(async () => {
         <p>{{ viewProduct.description }}</p>
       </v-card-text>
       <v-card-actions>
-        <v-btn 
-          color="primary" 
-          variant="outlined" 
-          append-icon="mdi-cart" 
-          size="small" 
+        <v-btn
+          color="teal-darken-3"
+          variant="outlined"
+          append-icon="mdi-cart"
+          size="small"
           block
           @click="addToCart(viewProduct); productDialog = false"
         >
@@ -113,7 +113,7 @@ onMounted(async () => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-  
+
   <!-- Snackbar for cart notification -->
   <v-snackbar v-model="addedToCartSnackbar" :timeout="2000" color="success">
     {{ snackbarMessage }}

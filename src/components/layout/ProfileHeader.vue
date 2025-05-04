@@ -41,13 +41,13 @@ const onLogout = async () => {
         <v-avatar
           v-if="authStore.userData.image_url"
           :image="authStore.userData.image_url"
-          color="orange-darken-3"
+          color="teal-lighten-5"
           size="large"
         >
         </v-avatar>
 
-        <v-avatar v-else color="orange-darken-3" size="large">
-          <span class="text-h5">
+        <v-avatar v-else color="teal-lighten-5" size="large">
+          <span class="text-teal-darken-3">
             {{ getAvatarText(authStore.userData.firstname + ' ' + authStore.userData.lastname) }}
           </span>
         </v-avatar>
@@ -65,13 +65,13 @@ const onLogout = async () => {
               <v-avatar
                 v-if="authStore.userData.image_url"
                 :image="authStore.userData.image_url"
-                color="orange-darken-3"
+                color="teal-lighten-5"
                 size="large"
               >
               </v-avatar>
 
-              <v-avatar v-else color="orange-darken-3" size="large">
-                <span class="text-h5">
+              <v-avatar v-else color="teal-lighten-5" size="large">
+                <span class="text-teal-darken-3">
                   {{
                     getAvatarText(authStore.userData.firstname + ' ' + authStore.userData.lastname)
                   }}
@@ -82,7 +82,7 @@ const onLogout = async () => {
         </v-list>
 
         <v-divider class="my-3"></v-divider>
-        
+
         <v-btn
           block
           prepend-icon="mdi-history"
