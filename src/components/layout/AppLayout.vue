@@ -204,9 +204,11 @@ onMounted(() => {
 }
 
 .navbar-glass {
-  background-color: rgba(0, 77, 64, 0.75) !important;
+  background-image: url('/images/Green.jpg');
+  background-size: cover;
+  background-position: center;
   color: white;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
 }
 
 :deep(body) {

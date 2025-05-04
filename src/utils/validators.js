@@ -43,12 +43,12 @@ export const emailValidator = (value) => {
 
 // 👉 Password Validator
 export const passwordValidator = (password) => {
-  const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()]).{8,}/
+  const regExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[-_])[A-Za-z\d-_]{8,}$/
   const validPassword = regExp.test(password)
 
   return (
     validPassword ||
-    'The password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+    'The password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one of the following special characters: - or _.'
   )
 }
 
@@ -66,7 +66,6 @@ export const betweenValidator = (value, min, max) => {
   )
 }
 
-
 export const integerValidator = (value) => {
   if (isEmpty(value)) return true
 
@@ -75,7 +74,6 @@ export const integerValidator = (value) => {
 
   return /^-?[0-9]+$/.test(String(value)) || 'This field must be a number'
 }
-
 
 export const regexValidator = (value, regex) => {
   if (isEmpty(value)) return true
@@ -88,13 +86,11 @@ export const regexValidator = (value, regex) => {
   return regeX.test(String(value)) || "The input doesn't match the expected format"
 }
 
-
 export const alphaValidator = (value) => {
   if (isEmpty(value)) return true
 
   return /^[A-Z]*$/i.test(String(value)) || 'The Alpha field may only contain alphabetic characters'
 }
-
 
 export const urlValidator = (value) => {
   if (isEmpty(value)) return true
@@ -103,7 +99,6 @@ export const urlValidator = (value) => {
 
   return re.test(String(value)) || 'URL is invalid'
 }
-
 
 export const lengthValidator = (value, length) => {
   if (isEmpty(value)) return true
